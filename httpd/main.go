@@ -9,7 +9,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	r.GET("/order", handler.OrderGet())
-
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.GET("/orders", handler.OrderGet())
+	r.GET("/ordersquery", handler.QueryStrings()) //query?name=ivan&prodcut=xxx
+	r.Run()                                       // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

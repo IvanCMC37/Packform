@@ -6,10 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func OrderGet() gin.HandlerFunc {
+func QueryStrings() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		name := c.Query("name")
+		product := c.Query("product")
 		c.JSON(http.StatusOK, gin.H{
-			"Message": "Found me",
+			"name":    name,
+			"product": product,
 		})
 	}
 }
