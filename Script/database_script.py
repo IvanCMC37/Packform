@@ -33,13 +33,13 @@ try:
    conn.autocommit = True
    cursor = conn.cursor()
 
-   cursor.execute("DROP TABLE IF EXISTS CUSTOMER_COMPANIES CASCADE")
-   sql ='''CREATE TABLE CUSTOMER_COMPANIES(
+   cursor.execute("DROP TABLE IF EXISTS COMPANIES CASCADE")
+   sql ='''CREATE TABLE COMPANIES(
       COMPANY_ID INT PRIMARY KEY NOT NULL,
       COMPANY_NAME TEXT NOT NULL
    )'''
    cursor.execute(sql)
-   print("Table CUSTOMER_COMPANIES created successfully........")
+   print("Table COMPANIES created successfully........")
 
    cursor.execute("DROP TABLE IF EXISTS CUSTOMERS CASCADE")
    sql ='''CREATE TABLE CUSTOMERS(
@@ -47,7 +47,7 @@ try:
       LOGIN TEXT NOT NULL UNIQUE,
       PASSWORD TEXT NOT NULL,
       NAME TEXT NOT NULL,
-      COMPANY_ID INT REFERENCES CUSTOMER_COMPANIES(COMPANY_ID) NOT NULL,
+      COMPANY_ID INT REFERENCES COMPANIES(COMPANY_ID) NOT NULL,
       CREDIT_CARDS TEXT NOT NULL
    )'''
    cursor.execute(sql)
@@ -86,7 +86,7 @@ try:
    #FILL IN DATA
    with open('Data\Test task - Postgres - customer_companies.csv', 'r') as f:
       next(f) # Skip the header row.
-      cursor.copy_expert("copy customer_companies from stdin (format csv)", f)
+      cursor.copy_expert("copy companies from stdin (format csv)", f)
       
    with open('Data\Test task - Postgres - customers.csv', 'r') as f:
       next(f) # Skip the header row.

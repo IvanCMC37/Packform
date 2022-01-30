@@ -1,11 +1,6 @@
 package models
 
-type company struct {
-	ID   int    `json: company_id`
-	Name string `json: company_name`
+type Company struct {
+	COMPANY_ID   int    `json:"id" gorm:"primary_key"`
+	COMPANY_NAME string `json:"name"`
 }
-
-// type company struct {
-// 	ID   int    `json: "COMPANY_ID" gorm: "primary_key"`
-// 	Name string `json: "COMPANY_NAME"`
-// }

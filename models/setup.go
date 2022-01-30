@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 func ConnectDataBase() {
 	// loading environment varibales
@@ -27,14 +27,15 @@ func ConnectDataBase() {
 
 	// Database connection string
 	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s password=%s port=%s sslmode=disable", host, user, dbName, password, dbPort)
+	fmt.Println(dbURI)
 
 	// // Opening connection to DB
 	database, err := gorm.Open(postgres.Open(dbURI), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		fmt.Printf("Successfully connected to database!")
+		fmt.Println("Successfully connected to database!")
 	}
 
-	db = database
+	DB = database
 }

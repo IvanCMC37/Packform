@@ -16,10 +16,7 @@ func main() {
 
 	models.ConnectDataBase()
 
-	r.GET("/orders", controllers.GetOrders())
-	r.GET("/ordersquery", controllers.QueryStrings()) //query?name=ivan&prodcut=xxx
-	r.Run()                                           // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-
-	//Close connection to database when the main function finishes
-	// defer db.
+	r.GET("/orders", controllers.GetOrders)
+	// r.GET("/ordersquery", controllers.QueryStrings()) //query?name=ivan&prodcut=xxx
+	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
