@@ -21,10 +21,10 @@ try:
    cursor = conn.cursor()
 
    #Drop if a database exist then create a new one
-   # cursor.execute(f'DROP DATABASE IF EXISTS {dbname}')
-   # print("Database dropped successfully........")
-   # cursor.execute(f'CREATE database {dbname}')
-   # print("Database created successfully........")
+   cursor.execute(f'DROP DATABASE IF EXISTS {dbname}')
+   print("Database dropped successfully........")
+   cursor.execute(f'CREATE database {dbname}')
+   print("Database created successfully........")
 
    #Create table
    conn = psycopg2.connect(
@@ -56,7 +56,7 @@ try:
    cursor.execute("DROP TABLE IF EXISTS ORDERS CASCADE")
    sql ='''CREATE TABLE ORDERS(
       ID INT PRIMARY KEY NOT NULL UNIQUE,
-      CREATED_AT TIMESTAMP NOT NULL,
+      ORDER_DATE TEXT NOT NULL,
       ORDER_NAME TEXT NOT NULL,
       CUSTOMER_ID TEXT NOT NULL REFERENCES CUSTOMERS(USER_ID)
    )'''
