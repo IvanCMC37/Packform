@@ -37,7 +37,7 @@ func GetOrders(c *gin.Context) {
 		Order("ORDER_ID").Scan(&results)
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": results,
+		"orders": results,
 	})
 
 }
