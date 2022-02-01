@@ -1,5 +1,5 @@
 <template>
-    <h3>1234231213</h3>
+    <h3>{{order.ORDER_NAME}}</h3>
 </template>
 
 <script>

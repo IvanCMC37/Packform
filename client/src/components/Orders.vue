@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :key="order.ORDER_NAME" v-for="order in orders">
+        <div :key="order.ORDER_NAME" v-for="order in orders.orders">
             <Order :order="order" />
         </div>
     </div>
@@ -12,7 +12,7 @@
     export default {
         name:"Orders",
         props: {
-            orders: Array
+            orders: Object
         },
         components: {
             Order

@@ -26,26 +26,13 @@ export default {
   },
   methods: { 
     async fetchOrders() {
-      const res = await fetch('http://localhost:5000/orders', 
-      { mode: 'no-cors'})
-      .then(
-        function(response) {
-          if (response.status !== 200) {
-            console.log('Looks like there was a problem. Status Code: ' +
-              response.status);
-            return;
-          }
 
-          // Examine the text in the response
-          response.json().then(function(data) {
-          console.log(data);
-          });
-        }
-      )
-  .catch(function(err) {
-    console.log('Fetch Error :-S', err);
-  });
-      
+      const res = await fetch('http://localhost:5000/orders')
+      .catch(function(error){
+        console.error(error)
+      });
+      const data = await res.json()
+      return data
     }
   },
   async created() {
