@@ -1,8 +1,20 @@
 <template>
     <div>
-        <div :key="order.ORDER_NAME" v-for="order in orders.orders">
-            <Order :order="order" />
-        </div>
+        <table>
+            <tr>
+                <th>Order name</th>
+                <th>Customer Company</th>
+                <th>Customer name</th>
+                <th>order date</th>
+                <th>Delivered Amount</th>
+                <th>Total Amount</th>
+            </tr>
+            <tr :key="order.ORDER_NAME" v-for="order in orders.orders">
+                <Order :order="order" />
+            </tr>
+        </table>
+            
+        
     </div>
 </template>
 
@@ -20,5 +32,7 @@
     }
 </script>
 <style scoped>
-
+table, th, td {
+  border:1px solid black;
+}
 </style>
