@@ -98,13 +98,11 @@ try:
 
    with open('Data\Test task - Postgres - order_items.csv', 'r') as f:
       next(f) # Skip the header row.
-      # cursor.copy_from(f, 'order_items', sep=',')
       cursor.copy_expert("copy order_items from stdin (format csv)", f)
       cursor.execute('UPDATE order_items SET price_per_unit = 0.0 WHERE price_per_unit is NULL')
 
    with open('Data\Test task - Postgres - deliveries.csv', 'r') as f:
       next(f) # Skip the header row.
-      # cursor.copy_from(f, 'deliveries', sep=',')
       cursor.copy_expert("copy deliveries from stdin (format csv)", f)
 
 except Exception as error:
