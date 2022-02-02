@@ -36,8 +36,14 @@ func GetOrders(c *gin.Context) {
 		Group("ORDER_ID, ORDER_NAME,COMPANY_NAME,NAME").
 		Order("ORDER_ID").Scan(&results)
 
+	var grand = 0.0
+	for _, subtotal := range results {
+		grand += subtotal.TOTAL
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"orders": results,
+		"grand":  grand,
 	})
 
 }

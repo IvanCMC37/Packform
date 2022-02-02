@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <Header />
+  <!-- <p>Computed reversed message: "{{ reversedMessage }}"</p> -->
     <Orders :orders="orders"/>
     <Footer />
   </div>
@@ -21,23 +22,24 @@ export default {
   },
   data() {
     return {
-      orders: [],
+      orders: []
     }
   },
   methods: { 
     async fetchOrders() {
-
+      console.log("Loading dataset")
       const res = await fetch('http://localhost:5000/orders')
-      .catch(function(error){
-        console.error(error)
+        .catch(function(error){
+          console.error(error)
       });
       const data = await res.json()
+      console.log("Finished loading dataset")
       return data
     }
   },
   async created() {
     this.orders = await this.fetchOrders()
-  }
+  },
 }
 </script>
 
