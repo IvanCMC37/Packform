@@ -22,6 +22,7 @@ func GetOrders(c *gin.Context) {
 
 	var results []Result
 
+	//full set of data
 	models.DB.Table("companies").Select("ORDER_ID,ORDER_NAME, COMPANY_NAME, NAME, string_agg(DISTINCT(ORDER_DATE),';') as ORDER_DATE, string_agg(DISTINCT(product),';')" +
 		" as PRODUCTS, sum(DISTINCT(TOTAL)) as TOTAL,sum(DISTINCT(quantity)) as ORDER_QUANTITY, sum(delivered_quantity) as DELIVERED_QUANTITY, sum(DELIVERED_AMOUNT) as DELIVERED_AMOUNT").
 		Joins("INNER join customers on companies.COMPANY_ID = customers.COMPANY_ID").

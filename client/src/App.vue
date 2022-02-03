@@ -2,7 +2,7 @@
   <div class="container">
     <Header />
   <!-- <p>Computed reversed message: "{{ reversedMessage }}"</p> -->
-    <Orders :orders="orders"/>
+    <Body :orders="orders"/>
     <Footer />
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script>
 import Header from'./components/Header'
 import Footer from'./components/Footer'
-import Orders from'./components/Orders'
+import Body from'./components/Body'
 
 
 export default {
@@ -18,11 +18,11 @@ export default {
   components: {
     Header,
     Footer,
-    Orders,
+    Body,
   },
   data() {
     return {
-      orders: []
+      orders: [],
     }
   },
   methods: { 
