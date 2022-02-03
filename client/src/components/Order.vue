@@ -11,7 +11,7 @@
 export default {
     name: 'Order',
     props: {
-        order: Object
+        order: Object,
     },
     methods: {
         currencyFormat(value) {
@@ -20,10 +20,12 @@ export default {
             }
         },
         datetimeFormat(value) {
+            // console.log(value)
             var options = {
+            year:'numeric',
             month: 'short', day: 'numeric',
             hour: 'numeric', minute: 'numeric',
-            timeZone: 'Australia/Sydney',
+            timeZone: 'Australia/Melbourne',
             };
             if (value !=null){
                 const date = new Date(Date.parse(value))
@@ -34,7 +36,4 @@ export default {
 }
 </script>
 <style>
-table, th, td {
-  border:1px solid black;
-}
 </style>
