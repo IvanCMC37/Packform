@@ -5,6 +5,9 @@
                 <input class="searchTextTop" type="text" v-model="searchTextTop" placeholder="Search by Order name/ Product" /> <br> <br>
             </span>
         </div>
+        <div>
+            <span>Created date</span>
+        </div>
         <div v-if="(filteredProducts != undefined)">
             <div v-if="filteredProducts.length >0">
                 <h4>Total amount: {{calTotal}}</h4>
@@ -37,8 +40,7 @@
                         placeholder=""/>
                         <label v-bind:class="{isActive: hasError}">{{customLabel}}</label>
                     </span>
-                </div>
-                   
+                </div>       
             </div>
             <div class="no-record" v-if="filteredProducts.length == 0">
                 <span class="no-record">No matching records...</span>
@@ -50,7 +52,8 @@
 
 <script>
     import Order from './Order'
-    
+    // import VCalendar from 'v-calendar';
+
     export default {
         name:"Body",
         props: {
@@ -210,7 +213,7 @@ input, span{
     height: 30px;
     font-size: 20px;
 }
-input.searchTop{
+input.searchTextTop{
     margin-left: 20px;
     width: 80%;
 }
