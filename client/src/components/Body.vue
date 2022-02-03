@@ -7,6 +7,7 @@
         </div>
         <div>
             <span>Created date</span>
+            <Datepicker id="picker-manual" :modelValue="date" @update:modelValue="rangeSelector" :enableTimePicker="false" range/>
         </div>
         <div v-if="(filteredProducts != undefined)">
             <div v-if="filteredProducts.length >0">
@@ -52,7 +53,10 @@
 
 <script>
     import Order from './Order'
-    // import VCalendar from 'v-calendar';
+    import Datepicker from 'vue3-date-time-picker';
+    import 'vue3-date-time-picker/dist/main.css'
+    import { ref } from 'vue';
+    const date = ref();
 
     export default {
         name:"Body",
@@ -60,7 +64,15 @@
             orders: Object,
         },
         components: {
-            Order
+            Order,
+            Datepicker,
+        },
+        setup() {
+            const date = ref();
+            
+            return {
+                date,
+            }
         },
         data() {
             return {
@@ -75,11 +87,23 @@
                 noPrevPage: false,
                 hasError: false,
                 customLabel: "",
+                date: null,
+                startDate : null,
+                endDate: null,
             }
         },
         computed: {
             filteredProducts() {
                 try{
+
+
+                    if(this.startDate){
+                    console.log(this.startDate)
+                    console.log(this.endDate)
+                    
+                    
+                    }
+                    
                     //Filter by text field
                     let product = this.orders.orders.filter(p => { 
                             return p.ORDER_NAME.toLowerCase().indexOf(this.searchTextTop.toLowerCase()) != -1
@@ -157,6 +181,7 @@
                 return Math.ceil(this.searchTextFilteredOrders/this.pageSize);
             },
             pageButtonControl(){
+                // this.rangeSelector()
                 this.maxPage = this.maxPageCal();
 
                 if(this.currentPage == 1) this.noPrevPage=true
@@ -190,8 +215,12 @@
 
                 this.searchTextBottom = 1
             },
-            rangeSelector(e) {
-                this.pageSize = e.target.value
+            rangeSelector(value) {
+                console.log("mfker")
+                this.startDate = value[0]
+                this.endDate = value[1]
+                console.log("assigned dates")
+
             }
         }      
     }
@@ -258,5 +287,8 @@ tr .hoverable:hover{
     font-size: 12px;
     padding-left: 12px;
     padding-right: 12px;
+}
+#picker-manual{
+    width: 500px;
 }
 </style>
