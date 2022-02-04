@@ -7,7 +7,7 @@
         </div>
         <div>
             <span>Created date</span>
-            <Datepicker id="picker-manual" :modelValue="date" @update:modelValue="rangeSelector" :enableTimePicker="false" range/>
+            <Datepicker id="picker-manual" :modelValue="date" :startDate="dataStartDate" @update:modelValue="rangeSelector" @cleared="rangeSelector" :enableTimePicker="true" range/>
         </div>
         <div v-if="(filteredProducts != undefined)">
             <div v-if="filteredProducts.length >0">
@@ -88,55 +88,54 @@
                 hasError: false,
                 customLabel: "",
                 date: null,
-                startDate : null,
-                endDate: null,
+                filterStartDate : null,
+                filterendDate: null,
+                dataStartDate: null,
+                dataEndDate: null,
             }
         },
         computed: {
             filteredProducts() {
                 try{
-
-
-                    if(this.startDate){
-                    console.log(this.startDate)
-                    console.log(this.endDate)
-                    
-                    
-                    }
-                    
                     //Filter by text field
                     let product = this.orders.orders.filter(p => { 
                             return p.ORDER_NAME.toLowerCase().indexOf(this.searchTextTop.toLowerCase()) != -1
                             || p.PRODUCTS.toLowerCase().indexOf(this.searchTextTop.toLowerCase()) != -1
                         })
                     this.searchTextFilteredOrders = product.length;
-                    console.log(this.searchTextFilteredOrders)
-                    console.log("this.currentPage: "+ this.currentPage)
+
                     //calculated if current page passed the maxpage or not
-                    // this.pageJumper()
                     this.currentPageControl()
 
                     //sort by date
                     if(this.currentSortDir){
                         product = product.sort((a, b) => new Date(a.ORDER_DATE) - new Date(b.ORDER_DATE))
+                        if(product.length>0){
+                            this.dataStartDate = product[0].ORDER_DATE
+                            this.dataEndDate = product[product.length - 1].ORDER_DATE
+                        }
                     }
                     else{
                         product = product.sort((b, a) => new Date(a.ORDER_DATE) - new Date(b.ORDER_DATE))
                     }
-                    console.log("prodcut ="+product.length)
+                    
+                    //apply filter if datepicker is enabled
+                    if(this.filterStartDate){
+                        product = product.filter(p =>{
+                            return (new Date(p.ORDER_DATE) >= this.filterStartDate && new Date(p.ORDER_DATE) <= this.filterEndDate )
+                        })
+                    }
+
                     //filter by pagesize
-                    // console.log("this.currentPage: "+ this.currentPage)
-                    // console.log("this.pageSize: "+ this.pageSize)
-                    // console.log("end: "+ this.currentPage*this.pageSize)
-                    product= product.filter((row, index) => {
-                            let start = (this.currentPage-1)*this.pageSize;
-                            let end = this.currentPage*this.pageSize;
-                            if(index >= start && index < end) return true;
-                        });
+                    product = product.filter((row, index) => {
+                        let start = (this.currentPage-1)*this.pageSize;
+                        let end = this.currentPage*this.pageSize;
+                        if(index >= start && index < end) return true;
+                    });
 
                     //control page button on/off
                     this.pageButtonControl();
-                    console.log("prodcut ="+product.length)
+
                     return product
                 }
                 catch(err){
@@ -181,7 +180,6 @@
                 return Math.ceil(this.searchTextFilteredOrders/this.pageSize);
             },
             pageButtonControl(){
-                // this.rangeSelector()
                 this.maxPage = this.maxPageCal();
 
                 if(this.currentPage == 1) this.noPrevPage=true
@@ -216,11 +214,16 @@
                 this.searchTextBottom = 1
             },
             rangeSelector(value) {
-                console.log("mfker")
-                this.startDate = value[0]
-                this.endDate = value[1]
-                console.log("assigned dates")
-
+                console.log("hji")
+                if(value != null){
+                    this.filterStartDate = value[0]
+                    this.filterEndDate = value[1]
+                    console.log("assigned dates")                   
+                }
+                else{
+                    this.filterStartDate = null
+                    this.filterEndDate = null
+                }
             }
         }      
     }
