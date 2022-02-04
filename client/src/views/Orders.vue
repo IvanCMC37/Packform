@@ -1,69 +1,76 @@
 <template>
-    <div>
-        <div class="search-wrapper panel-heading col-sm-12">
-            <span><i class="fas fa-search"></i>Search
-                <input class="searchTextTop" type="text" v-model="searchTextTop" placeholder="Search by Order name/ Product" /> <br> <br>
-            </span>
-        </div>
-        <div>
-            <span>Created date</span>
-            <Datepicker id="picker-manual" :modelValue="date" :startDate="dataStartDate" @update:modelValue="dateRangeSetter" @cleared="dateRangeSetter" :enableTimePicker="true" range/>
-        </div>
-        <div v-if="(filteredProducts != undefined)">
-            <div v-if="filteredProducts.length >0">
-                <h4>Total amount: {{calTotal}}</h4>
-                <table>
-                    <tr>
-                        <th class="unhoverable">Order name</th>
-                        <th class="unhoverable">Customer Company</th>
-                        <th class="unhoverable">Customer name</th>
-                        <th class="hoverable" @click="sortedOrders()">Order date</th>
-                        <th class="unhoverable">Delivered Amount</th>
-                        <th class="unhoverable">Total Amount</th>
-                    </tr>
-                    <tr :key="order.ORDER_NAME" v-for="order in filteredProducts">
-                        <Order :order="order" />
-                    </tr>
-                </table>
-                <div class="page-navigation">
-                    <select @change="rangeSelector" name="range" id="range">
-                        <option value="2">2/page</option>
-                        <option selected="selected" value="5">5/page</option>
-                        <option value="10">10/page</option>
-                        <option :value="searchTextFilteredOrders">Max/page</option>
-                    </select>
-                    <span>Total: {{maxPage}} page(s)</span>
-                    <button v-bind:class="{notActive: noPrevPage}" @click="prevPage"><i class="fas fa-backward"></i></button> 
-                    <span>{{currentPage}}</span>
-                    <button v-bind:class="{notActive: noNextPage}"  @click="nextPage"><i class="fas fa-forward"></i></button>
-                    <span>Go to page:
-                        <input @keyup.enter=pageJumper class="searchTextBottom" type="number" v-model="searchTextBottom" min="1" :max=maxPage step="1" 
-                        placeholder=""/>
-                        <br> <br>
-                        <label v-bind:class="{isActive: hasError}">{{customLabel}}</label>
-                    </span>
-                </div>       
-            </div>
-            <div class="no-record" v-if="filteredProducts.length == 0">
-                <span class="no-record">No matching records...</span>
-            </div>
-        </div>
-        <div v-else class="loading"><span class="loading">Loading data...</span></div>
+  <div class="container">
+    <div class="search-wrapper panel-heading col-sm-12">
+        <span><i class="fas fa-search"></i>Search
+            <input class="searchTextTop" type="text" v-model="searchTextTop" placeholder="Search by Order name/ Product" /> <br> <br>
+        </span>
     </div>
+    <div>
+        <span>Created date</span>
+        <Datepicker id="picker-manual" :modelValue="date" :startDate="dataStartDate" @update:modelValue="dateRangeSetter" @cleared="dateRangeSetter" :enableTimePicker="true" range/>
+    </div>
+    <div v-if="(filteredProducts != undefined)">
+        <div v-if="filteredProducts.length >0">
+            <h4>Total amount: {{calTotal}}</h4>
+            <table>
+                <tr>
+                    <th class="unhoverable">Order name</th>
+                    <th class="unhoverable">Customer Company</th>
+                    <th class="unhoverable">Customer name</th>
+                    <th class="hoverable" @click="sortedOrders()">Order date 
+                        <span class="icons-wrapper">
+                            <i v-bind:class="{isActive: !currentSortDir}" class="fas fa-sort-down"></i>
+                            <i v-bind:class="{isActive: currentSortDir}" class="fas fa-sort-up"></i>
+                        </span>
+                    </th>
+                    <th class="unhoverable">Delivered Amount</th>
+                    <th class="unhoverable">Total Amount</th>
+                </tr>
+                <tr :key="order.ORDER_NAME" v-for="order in filteredProducts">
+                    <Order :order="order" />
+                </tr>
+            </table>
+            <div class="page-navigation">
+                <select @change="rangeSelector" name="range" id="range">
+                    <option value="2">2/page</option>
+                    <option selected="selected" value="5">5/page</option>
+                    <option value="10">10/page</option>
+                    <option :value="searchTextFilteredOrders">Max/page</option>
+                </select>
+                <span>Total: {{maxPage}} page(s)</span>
+                <button v-bind:class="{notActive: noPrevPage}" @click="prevPage"><i class="fas fa-backward"></i></button> 
+                <span>{{currentPage}}</span>
+                <button v-bind:class="{notActive: noNextPage}"  @click="nextPage"><i class="fas fa-forward"></i></button>
+                <span>Go to page:
+                    <input @keyup.enter=pageJumper class="searchTextBottom" type="number" v-model="searchTextBottom" min="1" :max=maxPage step="1" 
+                    placeholder=""/>
+                    <br> <br>
+                    <label v-bind:class="{isActive: hasError}">{{customLabel}}</label>
+                </span>
+            </div>       
+        </div>
+        <div class="no-record" v-if="filteredProducts.length == 0">
+            <span class="no-record">No matching records...</span>
+        </div>
+    </div>
+    <div v-else class="loading"><span class="loading">Loading data...</span></div>
+    <div class="goBack"><router-link to="/">Go back</router-link></div>
+    
+  </div>
 </template>
 
 <script>
-    import Order from './Order'
+    import Order from '../components/Order'
     import Datepicker from 'vue3-date-time-picker';
     import 'vue3-date-time-picker/dist/main.css'
     import { ref } from 'vue';
     const date = ref();
 
     export default {
-        name:"Body",
-        props: {
-            orders: Object,
-        },
+        name:"Orders",
+        // props: {
+        //     orders: Object,
+        // },
         components: {
             Order,
             Datepicker,
@@ -77,6 +84,7 @@
         },
         data() {
             return {
+                orders: [],
                 searchTextTop: "",
                 searchTextBottom: 1,
                 currentSortDir:true,
@@ -107,10 +115,10 @@
                     //sort by date
                     if(this.currentSortDir){
                         product = product.sort((a, b) => new Date(a.ORDER_DATE) - new Date(b.ORDER_DATE))
-                        if(product.length>0){
-                            this.dataStartDate = product[0].ORDER_DATE
-                            this.dataEndDate = product[product.length - 1].ORDER_DATE
-                        }
+                        // if(product.length>0){
+                        //     this.dataStartDate = product[0].ORDER_DATE
+                        //     this.dataEndDate = product[product.length - 1].ORDER_DATE
+                        // }
                     }
                     else{
                         product = product.sort((b, a) => new Date(a.ORDER_DATE) - new Date(b.ORDER_DATE))
@@ -227,8 +235,21 @@
                     this.filterStartDate = null
                     this.filterEndDate = null
                 }
-            }
-        }      
+            },
+            async fetchOrders() {
+                console.log("Loading dataset")
+                const res = await fetch('api/orders')
+                .catch(function(error){
+                console.error(error)
+                });
+                const data = await res.json()
+                console.log("Finished loading dataset")
+                return data
+            }, 
+        },
+        async created() {
+            this.orders = await this.fetchOrders()
+        } 
     }
 </script>
 
@@ -305,5 +326,22 @@ tr .hoverable:hover{
 }
 #picker-manual{
     width: 500px;
+}
+.goBack{
+    text-align: center;
+}
+.icons-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  padding-left: 4px;
+}
+.icons-wrapper i.fa{
+  line-height: 0;
+}
+.hoverable .isActive{
+    visibility: collapse;
+}
+.fa-sort-up{
+    margin-top: -16px;
 }
 </style>

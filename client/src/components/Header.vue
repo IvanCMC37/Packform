@@ -1,6 +1,6 @@
 <template>
   <div class="pad-15-hor pad-15-ver header">
-       <h1>Orders information</h1>
+       <h1>Packform</h1>
     </div>
 </template>
 
@@ -13,5 +13,6 @@
 <style scoped>
 .header{
     padding-bottom: 30px;
+    text-align: center;
 }
 </style>
