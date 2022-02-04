@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="search-wrapper panel-heading col-sm-12">
-            <span>Search
+            <span><i class="fas fa-search"></i>Search
                 <input class="searchTextTop" type="text" v-model="searchTextTop" placeholder="Search by Order name/ Product" /> <br> <br>
             </span>
         </div>
         <div>
             <span>Created date</span>
-            <Datepicker id="picker-manual" :modelValue="date" :startDate="dataStartDate" @update:modelValue="rangeSelector" @cleared="rangeSelector" :enableTimePicker="true" range/>
+            <Datepicker id="picker-manual" :modelValue="date" :startDate="dataStartDate" @update:modelValue="dateRangeSetter" @cleared="dateRangeSetter" :enableTimePicker="true" range/>
         </div>
         <div v-if="(filteredProducts != undefined)">
             <div v-if="filteredProducts.length >0">
@@ -26,19 +26,20 @@
                     </tr>
                 </table>
                 <div class="page-navigation">
-                    <select @change="rangeSelector" name="cars" id="cars">
+                    <select @change="rangeSelector" name="range" id="range">
                         <option value="2">2/page</option>
                         <option selected="selected" value="5">5/page</option>
-                        <option value="8">8/page</option>
+                        <option value="10">10/page</option>
                         <option :value="searchTextFilteredOrders">Max/page</option>
                     </select>
                     <span>Total: {{maxPage}} page(s)</span>
-                    <button v-bind:class="{notActive: noPrevPage}" @click="prevPage">Previous</button> 
+                    <button v-bind:class="{notActive: noPrevPage}" @click="prevPage"><i class="fas fa-backward"></i></button> 
                     <span>{{currentPage}}</span>
-                    <button v-bind:class="{notActive: noNextPage}"  @click="nextPage">Next</button>
+                    <button v-bind:class="{notActive: noNextPage}"  @click="nextPage"><i class="fas fa-forward"></i></button>
                     <span>Go to page:
                         <input @keyup.enter=pageJumper class="searchTextBottom" type="number" v-model="searchTextBottom" min="1" :max=maxPage step="1" 
                         placeholder=""/>
+                        <br> <br>
                         <label v-bind:class="{isActive: hasError}">{{customLabel}}</label>
                     </span>
                 </div>       
@@ -102,10 +103,6 @@
                             return p.ORDER_NAME.toLowerCase().indexOf(this.searchTextTop.toLowerCase()) != -1
                             || p.PRODUCTS.toLowerCase().indexOf(this.searchTextTop.toLowerCase()) != -1
                         })
-                    this.searchTextFilteredOrders = product.length;
-
-                    //calculated if current page passed the maxpage or not
-                    this.currentPageControl()
 
                     //sort by date
                     if(this.currentSortDir){
@@ -118,13 +115,17 @@
                     else{
                         product = product.sort((b, a) => new Date(a.ORDER_DATE) - new Date(b.ORDER_DATE))
                     }
-                    
+
                     //apply filter if datepicker is enabled
                     if(this.filterStartDate){
                         product = product.filter(p =>{
                             return (new Date(p.ORDER_DATE) >= this.filterStartDate && new Date(p.ORDER_DATE) <= this.filterEndDate )
                         })
                     }
+
+                    //calculated if current page passed the maxpage or not
+                    this.searchTextFilteredOrders = product.length;
+                    this.currentPageControl()
 
                     //filter by pagesize
                     product = product.filter((row, index) => {
@@ -213,12 +214,14 @@
 
                 this.searchTextBottom = 1
             },
-            rangeSelector(value) {
-                console.log("hji")
+            rangeSelector(e) {
+                this.pageSize = e.target.value
+            },
+            dateRangeSetter(value) {
                 if(value != null){
                     this.filterStartDate = value[0]
                     this.filterEndDate = value[1]
-                    console.log("assigned dates")                   
+                    console.log("Assigned dates")                   
                 }
                 else{
                     this.filterStartDate = null
@@ -230,6 +233,9 @@
 </script>
 
 <style scoped>
+.fa-search{
+    padding-right: 12px;
+}
 th, tr, td{
     text-align: left;
     height: 70px;
@@ -270,6 +276,11 @@ tr .hoverable:hover{
     text-align: center;
     padding-top: 16px;
 }
+.page-navigation button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
 .page-navigation button.notActive{
     visibility: hidden;
 }
@@ -278,6 +289,7 @@ tr .hoverable:hover{
 }
 .page-navigation label.isActive{
     visibility: visible;
+    color: red;
 }
 .page-navigation input{
     margin-left: 30px;
